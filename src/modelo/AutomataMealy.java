@@ -6,73 +6,49 @@ import java.util.*;
 
 public class AutomataMealy extends Automata {
 
-	// Key:Position in matrix, value: Estado
+
 	public HashMap<Integer, Estado> Estados;
 
-	// matriz whit transitions
-	public EstadoSalida[][] matrix;
+	
+	public EstadoSalida[][] matriz;
 
-	// Number of the suffix available to create a Estado
-	public int count_Estado;
 
-	// Number of the suffix available to create a Estado
-	public int count_carry;
+	public int cantidadEstado;
 
-	//String with all partitions
-	public String print_partition;
 
-	/**
-	 * <h1>AutomataMealy constructor where attributes are initialized</h1>
-	 */
+	public int cantidadSobra;
+
+
+	public String cadenaParticion;
+
 	public AutomataMealy() {
 		Estados = new HashMap<Integer, Estado>();
-		print_partition = "";
-		count_Estado = 0;
-		count_carry = 0;
+		cadenaParticion = "";
+		cantidadEstado = 0;
+		cantidadSobra = 0;
 	}
 
-	/**
-	 * <h1>AutomataMealy constructor where attributes are initialized</h1>
-	 */
 	public AutomataMealy(int carry) {
 		Estados = new HashMap<Integer, Estado>();
-		count_Estado = 0;
-		count_carry = carry;
-		print_partition = "";
+		cantidadEstado = 0;
+		cantidadSobra = carry;
+		cadenaParticion = "";
 	}
 
-	// ******************************************************************************
-	// ***************** The following methods work on Estados *********************
-	// ******************************************************************************
-
-	/**
-	 * Add a Estado into the AutomataMealy machine<br/>
-	 * The first Estado added will be the initial Estado q0
-	 */
-	public void add_Estado() {
-		Estado s = new Estado("q" + (count_Estado + count_carry));
-		Estados.put(count_Estado, s);
-		count_Estado++;
+	public void añadirEstado() {
+		Estado s = new Estado("q" + (cantidadEstado + cantidadSobra));
+		Estados.put(cantidadEstado, s);
+		cantidadEstado++;
 	}
 
-	/**
-	 * Add a Estado into the AutomataMealy machine<br/>
-	 * The first Estado added will be the initial Estado q0
-	 */
-	public void add_Estado(int quantity) {
-		for (int i = 0; i < quantity; i++) {
-			add_Estado();
+	public void añadirEstado(int cantidad) {
+		for (int i = 0; i < cantidad; i++) {
+			añadirEstado();
 		}
 	}
 
-	/**
-	 * this method find a Estado
-	 * 
-	 * @param Nombre Nombre of the Estado that you want to find
-	 * @return position in the hash r<br/>
-	 *         If the status is not found,-1 is returned
-	 */
-	public int find_Estado(String Nombre) {
+
+	public int encontrarEstado(String Nombre) {
 
 		for (int i = 0; i < Estados.size(); i++) {
 			if (Estados.get(i).getNombre().equals(Nombre)) {
@@ -82,13 +58,8 @@ public class AutomataMealy extends Automata {
 		return -1;
 	}
 
-	/**
-	 * this method delete a Estado
-	 * 
-	 * @param number Number of the Estado that you want to delete
-	 */
-	public boolean deleted_Estado(String Estado) {
-		int x = find_Estado(Estado);
+	public boolean eliminarEstado(String Estado) {
+		int x = encontrarEstado(Estado);
 
 		if (x > -1) {
 			Estados.remove(x);
@@ -97,14 +68,8 @@ public class AutomataMealy extends Automata {
 		return false;
 	}
 
-	/**
-	 * this method Replaces the Nombre of a Estado with a new one
-	 * 
-	 * @param old_Nombre Current Estado Nombre
-	 * @param new_Nombre Nombre that you want to give to the Estado
-	 */
-	public boolean reNombre_Estado(String old_Nombre, String new_Nombre) {
-		int x = find_Estado(old_Nombre);
+	public boolean modificarNombreEstado(String old_Nombre, String new_Nombre) {
+		int x = encontrarEstado(old_Nombre);
 
 		if (x > -1) {
 			Estados.get(x).setNombre(new_Nombre);
@@ -113,55 +78,34 @@ public class AutomataMealy extends Automata {
 		return false;
 	}
 
-	// ******************************************************************************
-	// ***************** The following methods work on matrix ***********************
-	// ******************************************************************************
-
-	/**
-	 * This method initializes the matrix
-	 */
-	public void initialize_Matrix() {
-		matrix = new EstadoSalida[Estados.size()][simbolosEntrada.size()];
+	public void inicializarMatriz() {
+		matriz = new EstadoSalida[Estados.size()][simbolosEntrada.size()];
 	}
 
-	/**
-	 * This method adds a transition to the matrix
-	 * 
-	 * @param initial_Estado
-	 * @param final_Estado
-	 * @param input
-	 * @param output
-	 */
-	public void add_transition(String initial_Estado, String final_Estado, String input, String output) {
+	public void añadirTrancision(String initial_Estado, String final_Estado, String input, String output) {
 
-		if (matrix == null) {
-			initialize_Matrix();
+		if (matriz == null) {
+			inicializarMatriz();
 		}
 
 		int row = encontrarEntrada(input);
-		int column = find_Estado(initial_Estado);
-		int fs = find_Estado(final_Estado);
+		int column = encontrarEstado(initial_Estado);
+		int fs = encontrarEstado(final_Estado);
 		
 		if (row > -1 && column > -1 && fs > -1) {
 			EstadoSalida s = new EstadoSalida(final_Estado, output);
-			matrix[column][row] = s;
+			matriz[column][row] = s;
 		}
 	}
 
-	/**
-	 * This method verify that the AutomataMealy's matrix has an empty field
-	 * 
-	 * @return A boolean that represent the Estado the matrix <br/>
-	 *         true: if the matrix its full<br/>
-	 *         false: if the matrix have one or more empty field
-	 */
-	public boolean not_Null_Matrix() {
 
-		for (int i = 0; i < matrix.length; i++) {
+	public boolean verificacionMatriz() {
 
-			for (int j = 0; j < matrix[0].length; j++) {
+		for (int i = 0; i < matriz.length; i++) {
 
-				if (matrix[i][j] == null) {
+			for (int j = 0; j < matriz[0].length; j++) {
+
+				if (matriz[i][j] == null) {
 					return false;
 				}
 			}
@@ -170,15 +114,10 @@ public class AutomataMealy extends Automata {
 		return true;
 	}
 
-	/**
-	 * This method retorn a strig which represent the AutomataMealy matrix
-	 * 
-	 * @return the string
-	 */
-	public String print_Matrix() {
+	public String imprimirMatriz() {
 
-		if (matrix == null) {
-			initialize_Matrix();
+		if (matriz == null) {
+			inicializarMatriz();
 		}
 
 		String print = "";
@@ -189,11 +128,11 @@ public class AutomataMealy extends Automata {
 			print += (simbolosEntrada.get(x) + "\t");
 		}
 		print += "\n";
-		for (int x = 0; x < matrix.length; x++) {
+		for (int x = 0; x < matriz.length; x++) {
 			print += (Estados.get(x).getNombre() + "|\t");
 
-			for (int y = 0; y < matrix[x].length; y++) {
-				EstadoSalida so = matrix[x][y];
+			for (int y = 0; y < matriz[x].length; y++) {
+				EstadoSalida so = matriz[x][y];
 
 				if (so == null) {
 					print += ("NULL\t");
@@ -207,17 +146,12 @@ public class AutomataMealy extends Automata {
 		return print;
 	}
 
-	/**
-	 * This method find the Estados attainable for the Estado in the parameter
-	 * 
-	 * @param Estado : string with the Nombre of the Estado
-	 * @return an Arraylist whit the Nombre of Estados attainable
-	 */
-	private ArrayList<String> Achievable_Estados(String Estado) {
+
+	private ArrayList<String> EstadosAlcanzables(String Estado) {
 		ArrayList<String> list = new ArrayList<String>();
-		int position = find_Estado(Estado);
-		for (int i = 0; i < matrix[0].length; i++) {
-			EstadoSalida x = matrix[position][i];
+		int position = encontrarEstado(Estado);
+		for (int i = 0; i < matriz[0].length; i++) {
+			EstadoSalida x = matriz[position][i];
 			if (!x.getNombre().equals(Estado)) {
 				list.add(x.getNombre());
 			}
@@ -225,10 +159,7 @@ public class AutomataMealy extends Automata {
 		return list;
 	}
 
-	/**
-	 * this method delete the Estados that q0 can't reach
-	 */
-	public void delete_Estados_Unreachable() {
+	public void eliminacionEstadosNoAccesibles() {
 
 		HashMap<String, Boolean> map = new HashMap<>();
 		Queue<String> queue = new LinkedList<>();
@@ -241,7 +172,7 @@ public class AutomataMealy extends Automata {
 			String u = queue.poll();
 			r.add(u);
 
-			ArrayList<String> achivable = Achievable_Estados(u);
+			ArrayList<String> achivable = EstadosAlcanzables(u);
 			for (int i = 0; i < achivable.size(); i++) {
 
 				if (!map.containsKey(achivable.get(i))) {
@@ -271,7 +202,7 @@ public class AutomataMealy extends Automata {
 
 			if(r.contains(Estados.get(i).getNombre())) {
 				for (int j = 0; j < simbolosEntrada.size(); j++) {
-					aux[k][j] = matrix[i][j];
+					aux[k][j] = matriz[i][j];
 				}
 				k++;
 			}
@@ -279,42 +210,35 @@ public class AutomataMealy extends Automata {
 		}
 
 		Estados = aux2;
-		matrix = aux;
+		matriz = aux;
 	}
 
-	// ******************************************************************************
-	// ***************** The following methods work on partitions *******************
-	// ******************************************************************************
 
-	/**
-	 * this method calculate the first partition
-	 * @return Array with sets of first partition 
-	 */
-	public ArrayList<ArrayList<String>> first_partition() {
+	public ArrayList<ArrayList<String>> primerParticion() {
 		ArrayList<ArrayList<String>> ret = new ArrayList<ArrayList<String>>();
-		ArrayList<Integer> visited = new ArrayList<Integer>();
+		ArrayList<Integer> visitado = new ArrayList<Integer>();
 		ArrayList<String> partition = null;
-print_partition = "";
+cadenaParticion = "";
 		
-		for (int i = 0; i < matrix.length; i++) {
-			if (!visited.contains(i)) {
+		for (int i = 0; i < matriz.length; i++) {
+			if (!visitado.contains(i)) {
 				partition = new ArrayList<String>();
 				partition.add(Estados.get(i).getNombre());
-				visited.add(i);
+				visitado.add(i);
 
-				for (int j = 0; j < matrix.length; j++) {
+				for (int j = 0; j < matriz.length; j++) {
 
-					if (!visited.contains(j)) {
+					if (!visitado.contains(j)) {
 
 						boolean aux = true;
-						for (int k = 0; k < matrix[0].length && aux; k++) {
-							if (!matrix[i][k].getSalida().equals(matrix[j][k].getSalida())) {
+						for (int k = 0; k < matriz[0].length && aux; k++) {
+							if (!matriz[i][k].getSalida().equals(matriz[j][k].getSalida())) {
 								aux = false;
 							}
 						}
 						if (aux) {
 							partition.add(Estados.get(j).getNombre());
-							visited.add(j);
+							visitado.add(j);
 
 						}
 					}
@@ -325,20 +249,16 @@ print_partition = "";
 		return ret;
 	}
 
-	/**
-	 * this method calculate the last partition
-	 * @return Array with sets of last partition
-	 */
 	public ArrayList<ArrayList<String>> partition() {
 
 		ArrayList<ArrayList<String>> original = new ArrayList<ArrayList<String>>();
-		ArrayList<ArrayList<String>> next = first_partition();
+		ArrayList<ArrayList<String>> siguiente = primerParticion();
 
-		while (original.size() != next.size()) {
+		while (original.size() != siguiente.size()) {
 
-			original = next;
-			next = new ArrayList<ArrayList<String>>();
-			print_partition += (añadirParticion(original));
+			original = siguiente;
+			siguiente = new ArrayList<ArrayList<String>>();
+			cadenaParticion += (añadirParticion(original));
 
 			for (int i = 0; i < original.size(); i++) { // A partitions
 
@@ -347,11 +267,11 @@ print_partition = "";
 				aux.add(original.get(i).get(0));
 
 				for (int j = 1; j < original.get(i).size(); j++) {// Estado
-					boolean same = true;
-					for (int m = 0; m < matrix[0].length; m++) { // simbolosEntrada
+					boolean igual = true;
+					for (int m = 0; m < matriz[0].length; m++) { // simbolosEntrada
 
-						String Estado1 = matrix[find_Estado(original.get(i).get(0))][m].getNombre();
-						String Estado2 = matrix[find_Estado(original.get(i).get(j))][m].getNombre();
+						String Estado1 = matriz[encontrarEstado(original.get(i).get(0))][m].getNombre();
+						String Estado2 = matriz[encontrarEstado(original.get(i).get(j))][m].getNombre();
 
 						for (int n = 0; n < original.size(); n++) { // All partition
 
@@ -359,25 +279,25 @@ print_partition = "";
 
 								if (!original.get(n).contains(Estado2)) {
 									not.add(original.get(i).get(j));
-									m = matrix[0].length;
-									same = false;
+									m = matriz[0].length;
+									igual = false;
 								}
 							}
 						}
 					}
 					
-					if (same) {
+					if (igual) {
 						aux.add(original.get(i).get(j));
 					}
 				}
-				next.add(aux);
+				siguiente.add(aux);
 				if (not.size() > 0) {
-					next.add(not);
+					siguiente.add(not);
 				}
 			}
 
 		}
-		print_partition += (añadirParticion(next));
-		return next;
+		cadenaParticion += (añadirParticion(siguiente));
+		return siguiente;
 	}
 }
