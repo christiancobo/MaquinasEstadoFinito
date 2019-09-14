@@ -10,19 +10,19 @@ public class EstadoSalida{
 		this.salida = salida;
 	}
 
-	public String getnombre() {
+	public String getNombre() {
 		return nombre;
 	}
 
-	public void setnombre(String nombre) {
+	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
-	public String getsalida() {
+	public String getSalida() {
 		return salida;
 	}
 
-	public void setsalida(String salida) {
+	public void setSalida(String salida) {
 		this.salida = salida;
 	}
 	
