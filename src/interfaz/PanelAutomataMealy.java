@@ -31,7 +31,7 @@ public class PanelAutomataMealy extends JPanel implements ActionListener{
 	
 	
 	private JLabel labelCantidadEstados;
-	private JLabel labelCantidadEntadas;
+	private JLabel labelCantidadEntradas;
 	private JLabel label0;
 	private JLabel label1;
 	private JLabel label2;
@@ -70,8 +70,9 @@ public class PanelAutomataMealy extends JPanel implements ActionListener{
 		setBorder(configuracion);
 		
 		
+		
 		labelCantidadEstados = new JLabel("Cantidad estados");
-		labelCantidadEntadas = new JLabel("Cantidad entradas");
+		labelCantidadEntradas = new JLabel("Cantidad entradas");
 		label0 = new JLabel(" ");
 		label1 = new JLabel(" ");
 		label2 = new JLabel(" ");
@@ -106,6 +107,43 @@ public class PanelAutomataMealy extends JPanel implements ActionListener{
 		butMatriz.setActionCommand(MATRIZ);
 		butMatriz.addActionListener(this);
 		
+		
+		txtArea = new JTextArea();
+		txtArea.setSize(100, 100);
+		JScrollPane scroll = new JScrollPane(txtArea);
+		txtArea.setEditable(false);
+		
+		
+		JPanel panelAux = new JPanel();
+		panelAux.setLayout(new GridLayout(12, 2));
+		panelAux.add(labelCantidadEstados);
+		panelAux.add(txtCantidadEstados);
+		panelAux.add(labelCantidadEntradas);
+		panelAux.add(txtCantidadEntradas);
+		panelAux.add(butActualizarMatriz);
+		panelAux.add(label0);
+		panelAux.add(labelRelacion);
+		panelAux.add(label1);
+		panelAux.add(labelEstadoInicial);
+		panelAux.add(txtEstadoInicial);
+		panelAux.add(labelEstadoFinal);
+		panelAux.add(txtEstadoFinal);
+		panelAux.add(labelEntradaRelacion);
+		panelAux.add(txtEntrada);
+		panelAux.add(labelSalidaRelacion);
+		panelAux.add(txtSalida);
+		panelAux.add(butCrearRelacion);
+		panelAux.add(label2);
+		panelAux.add(label3);
+		panelAux.add(label4);
+		panelAux.add(butMatriz);
+		panelAux.add(label5);
+		panelAux.add(label6);
+		
+		setLayout(new BorderLayout());
+		add(panelAux, BorderLayout.NORTH);
+
+		add(scroll, BorderLayout.CENTER);
 		
 		
 		

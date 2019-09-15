@@ -12,7 +12,7 @@ public class PanelCabecera extends JPanel{
 	public PanelCabecera() {
 		
 		titulo = new JLabel("                                      "
-				+ "                         Minimización");
+				+ "  Minimización");
 		setLayout(new BorderLayout());
 		add(titulo, BorderLayout.CENTER);
 		
